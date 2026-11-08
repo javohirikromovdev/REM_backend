@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "EmailVerification" ADD COLUMN     "lastSentAt" TIMESTAMP(3),
+ADD COLUMN     "sendCount" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "windowStartedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
