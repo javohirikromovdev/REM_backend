@@ -7,7 +7,6 @@ import { LoginDto } from './dto/login.dto.js';
 import { SendCodeDto, VerifyCodeDto } from './dto/email-verification.dto.js';
 import { EmailVerificationService } from './email-verification.service.js';
 
-
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -15,14 +14,12 @@ export class AuthController {
     private emailVerification: EmailVerificationService,
   ) {}
 
-  // Ro'yxatdan o'tishdan oldin emailga 6 xonali kod yuborish
   @Post('email/send-code')
   @HttpCode(200)
   sendCode(@Body() dto: SendCodeDto) {
     return this.emailVerification.sendCode(dto.email)
   }
 
-  // Emaildagi kodni tekshirish
   @Post('email/verify')
   @HttpCode(200)
   verifyCode(@Body() dto: VerifyCodeDto) {

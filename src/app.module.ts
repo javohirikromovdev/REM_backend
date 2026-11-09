@@ -13,12 +13,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { LogMailTransport, MailModule, SmtpTransport } from '@nestjs/mail';
 
-
-
 @Module({
   imports: [
     PrismaModule,
-    // SMTP_URL bo'lsa haqiqiy email yuboriladi, bo'lmasa (development) xat server logiga yoziladi
     MailModule.forRootAsync({
       useFactory: () => ({
         transport: process.env.SMTP_URL

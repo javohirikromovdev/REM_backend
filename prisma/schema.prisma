@@ -105,7 +105,6 @@ model Inquiry {
   property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
 
-// Ro'yxatdan o'tishdan oldin emailni 6 xonali kod bilan tasdiqlash
 model EmailVerification {
   id              Int       @id @default(autoincrement())
   email           String    @unique
@@ -113,7 +112,6 @@ model EmailVerification {
   expiresAt       DateTime
   attempts        Int       @default(0)
   verifiedAt      DateTime?
-  // 24 soatlik oynada nechta kod yuborilgani (kuniga 5 ta)
   sendCount       Int       @default(0)
   windowStartedAt DateTime  @default(now())
   lastSentAt      DateTime?

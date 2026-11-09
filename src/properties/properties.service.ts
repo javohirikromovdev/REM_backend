@@ -31,7 +31,6 @@ export class PropertiesService {
     })
   }
 
-
   async findOne(id: number, user: AuthUser) {
     const property = await this.prisma.property.findUnique({
       where: { id },
@@ -55,7 +54,6 @@ export class PropertiesService {
     }
     return property
   }
-
 
   async findAll(query: QueryPropertiesDto) {
     const page = query.page ?? 1
@@ -113,7 +111,6 @@ export class PropertiesService {
 
     return { items, total, page, limit, totalPages: Math.ceil(total / limit) }
   }
-
 
   async addImage(
     propertyId: number,
@@ -176,7 +173,6 @@ export class PropertiesService {
         throw new NotFoundException('Category not found')
       }
     }
-    // Tahrirlangan e'lon qayta admin tekshiruviga tushadi — tasdiqdan keyin mazmunni almashtirib bo'lmaydi
     return this.prisma.property.update({
       where: { id },
       data: { ...updatePropertyDto, status: 'PENDING' },
@@ -233,7 +229,6 @@ export class PropertiesService {
 
     return { message: 'Image deleted' }
   }
-
 
   async findMine(userId: number, query: PaginationQueryDto) {
     const page = query.page ?? 1

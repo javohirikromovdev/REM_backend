@@ -131,7 +131,6 @@ async function main() {
   let created = 0
   for (let i = 0; i < properties.length; i++) {
     const p = properties[i]
-    // Rasm fayli har doim yoziladi: DB boshqa kompyuterda seed qilingan bo'lsa ham /uploads ishlaydi
     const url = createPlaceholder(i, p.title)
 
     const exists = await prisma.property.findFirst({

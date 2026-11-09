@@ -4,11 +4,11 @@ import { randomInt } from 'node:crypto'
 import * as bcrypt from 'bcrypt'
 import { PrismaService } from '../prisma/prisma.service.js'
 
-export const CODE_TTL_SECONDS = 10 * 60 // kod 10 daqiqa amal qiladi
-export const RESEND_AFTER_SECONDS = 60 // qayta yuborish orasidagi minimal vaqt
-export const MAX_ATTEMPTS = 5 // noto'g'ri urinishlar chegarasi
-export const VERIFIED_WINDOW_SECONDS = 30 * 60 // tasdiqlangandan keyin ro'yxatdan o'tish uchun vaqt
-export const DAILY_SEND_LIMIT = 5 // bitta email uchun 24 soatda nechta kod yuborish mumkin
+export const CODE_TTL_SECONDS = 10 * 60
+export const RESEND_AFTER_SECONDS = 60
+export const MAX_ATTEMPTS = 5
+export const VERIFIED_WINDOW_SECONDS = 30 * 60
+export const DAILY_SEND_LIMIT = 5
 export const DAILY_WINDOW_SECONDS = 24 * 60 * 60
 
 @Injectable()
@@ -20,7 +20,6 @@ export class EmailVerificationService {
     private mailer: Mailer,
   ) {}
 
-  /** 6 xonali kod yaratadi, xeshini saqlaydi va emailga yuboradi */
   async sendCode(email: string) {
     const existingUser = await this.prisma.user.findUnique({ where: { email } })
     if (existingUser) {
@@ -30,7 +29,6 @@ export class EmailVerificationService {
     const now = Date.now()
     const existing = await this.prisma.emailVerification.findUnique({ where: { email } })
 
-    // Ikki yuborish orasida kamida 1 daqiqa
     if (existing?.lastSentAt && !existing.verifiedAt) {
       const elapsed = (now - existing.lastSentAt.getTime()) / 1000
       if (elapsed < RESEND_AFTER_SECONDS) {
@@ -41,7 +39,6 @@ export class EmailVerificationService {
       }
     }
 
-    // 24 soatlik oyna: oyna tugagan bo'lsa hisob qaytadan boshlanadi
     const windowExpired = !existing || now - existing.windowStartedAt.getTime() >= DAILY_WINDOW_SECONDS * 1000
     const windowStartedAt = windowExpired ? new Date(now) : existing.windowStartedAt
     const sendCount = windowExpired ? 0 : existing.sendCount
@@ -74,7 +71,6 @@ export class EmailVerificationService {
       })
     } catch (error) {
       this.logger.error(`Verification email to ${email} failed: ${(error as Error).message}`)
-      // Xat ketmadi — bu urinish limitdan ayirilmaydi va kod yaroqsiz qilinadi
       await this.prisma.emailVerification
         .update({ where: { email }, data: { sendCount: sendCount, lastSentAt: existing?.lastSentAt ?? null, expiresAt: new Date(0) } })
         .catch(() => undefined)
@@ -90,7 +86,6 @@ export class EmailVerificationService {
     }
   }
 
-  /** Kodni tekshiradi; to'g'ri bo'lsa emailni tasdiqlangan deb belgilaydi */
   async verifyCode(email: string, code: string) {
     const record = await this.prisma.emailVerification.findUnique({ where: { email } })
     if (!record) {
@@ -116,7 +111,6 @@ export class EmailVerificationService {
     return { verified: true }
   }
 
-  /** Ro'yxatdan o'tishdan oldin chaqiriladi: email yaqinda tasdiqlangan bo'lishi shart */
   async assertVerified(email: string) {
     const record = await this.prisma.emailVerification.findUnique({ where: { email } })
     const fresh = record?.verifiedAt && Date.now() - record.verifiedAt.getTime() < VERIFIED_WINDOW_SECONDS * 1000

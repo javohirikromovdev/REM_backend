@@ -15,7 +15,6 @@ export class AuthService {
     private emailVerification: EmailVerificationService
   ) { }
 
-
   async register(registerDto: RegisterDto) {
     const { email, password } = registerDto
 
@@ -27,7 +26,6 @@ export class AuthService {
       throw new ConflictException('Email already exists')
     }
 
-    // Email 6 xonali kod bilan tasdiqlangan bo'lishi shart
     await this.emailVerification.assertVerified(email)
 
     const hash = await bcrypt.hash(password, 10)
