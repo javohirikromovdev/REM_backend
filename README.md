@@ -102,6 +102,7 @@ npm run dev        # http://localhost:5173
 | `PORT` | yo‘q | Backend porti, standart `3000` |
 | `SMTP_URL` | yo‘q | Email yuborish uchun SMTP. Gmail: `smtps://LOGIN%40gmail.com:APP_PASSWORD@smtp.gmail.com:465` (App password kerak). Bo‘sh bo‘lsa, kod xat o‘rniga **backend logiga** yoziladi |
 | `MAIL_FROM` | yo‘q | Jo‘natuvchi, masalan `REM <LOGIN@gmail.com>` |
+| `BREVO_API_KEY` | yo‘q | Brevo HTTPS API kaliti. Railway Free/Trial/Hobby tariflari SMTP’ni bloklaydi, u yerda email shu orqali yuboriladi. Berilsa `SMTP_URL` dan ustun turadi; `MAIL_FROM` Brevo’da tasdiqlangan jo‘natuvchi bo‘lishi kerak |
 
 Frontend: `frontend/.env` dagi `VITE_API_BASE_URL` (standart `http://localhost:3000`).
 

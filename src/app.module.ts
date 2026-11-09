@@ -12,15 +12,18 @@ import { AuthModule } from './auth/auth.module.js';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { LogMailTransport, MailModule, SmtpTransport } from '@nestjs/mail';
+import { BrevoTransport } from './mail/brevo.transport.js';
 
 @Module({
   imports: [
     PrismaModule,
     MailModule.forRootAsync({
       useFactory: () => ({
-        transport: process.env.SMTP_URL
-          ? new SmtpTransport({ url: process.env.SMTP_URL })
-          : new LogMailTransport(),
+        transport: process.env.BREVO_API_KEY
+          ? new BrevoTransport(process.env.BREVO_API_KEY)
+          : process.env.SMTP_URL
+            ? new SmtpTransport({ url: process.env.SMTP_URL })
+            : new LogMailTransport(),
         from: process.env.MAIL_FROM ?? 'REM <no-reply@rem.local>',
       }),
     }),
